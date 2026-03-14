@@ -11,6 +11,50 @@ const answerSchema = z.object({
   y: z.int(),
 });
 
+async function validateAnswer(
+  answer: {
+    roundId: string;
+    place: string;
+    x: number;
+    y: number;
+  },
+  correctCount: number,
+  startTime: Date,
+): Promise<{ isCoorect: boolean; isGameOver: boolean }> {
+  try {
+    const res = await prisma.answer.findFirstOrThrow({
+      where: {
+        place: answer.place,
+      },
+    });
+    if (res.x === answer.x && res.y === answer.y) {
+      correctCount++;
+      let end = new Date();
+      let durationMs = end.getTime() - startTime.getTime();
+      if (correctCount === 36) {
+        await prisma.round.update({
+          where: {
+            id: answer.roundId,
+          },
+          data: { correctCount, endTime: end, durationMs: durationMs },
+        });
+        return { isCoorect: true, isGameOver: true };
+      } else {
+        await prisma.round.update({
+          where: {
+            id: answer.roundId,
+          },
+          data: { correctCount },
+        });
+        return { isCoorect: true, isGameOver: false };
+      }
+    }
+    return { isCoorect: false, isGameOver: false };
+  } catch (e) {
+    throw e;
+  }
+}
+
 export async function POST(request: Request) {
   const body = await request.json();
 
@@ -26,16 +70,22 @@ export async function POST(request: Request) {
       },
     );
   try {
+    // @ts-ignore
     const round = await prisma.round.findFirstOrThrow({
       where: {
         id: answer.data?.roundId,
       },
     });
+    const res = await validateAnswer(
+      answer.data,
+      round.correctCount,
+      round.startTime,
+    );
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: "correct answer",
-        round: round.id,
+        isGameOver: res.isGameOver,
+        isCorrect: res.isCoorect,
       }),
     );
   } catch (e) {

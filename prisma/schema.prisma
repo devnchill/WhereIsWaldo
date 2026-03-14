@@ -8,12 +8,19 @@ datasource db {
 }
 
 model Round {
-    id           String    @id @default(uuid()) 
-    userName     String? 
-    startTime    DateTime  @default(now()) 
-    endTime      DateTime? 
-    durationMs   Int? 
-    correctCount Int       @default(0) 
-    totalCount   Int	   @default(36) 
-    completed    Boolean   @default(false) 
+    id           String    @id @default(uuid())
+    userName     String?
+    startTime    DateTime  @default(now())
+    endTime      DateTime?
+    durationMs   BigInt?
+    correctCount Int       @default(0)
+    totalCount   Int       @default(36)
+    completed    Boolean   @default(false)
+}
+
+model Answer {
+    id    String @id @default(uuid())
+    place String
+    x     Int
+    y     Int
 }

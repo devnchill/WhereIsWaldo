@@ -16,8 +16,8 @@ export default function Home() {
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
     setMenuCoord({ x, y });
     setMenuVisible(true);
     console.log(menuCoord);

@@ -1,0 +1,24 @@
+info:
+  name: SubmitPOST
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/round/submit
+  body:
+    type: json
+    data: |-
+      {
+        "roundId":"aef12f0f-2258-4223-b8b9-9b09a246bbed",
+        "place": "foo",
+        "x": 2,
+        "y": 3
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

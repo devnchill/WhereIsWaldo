@@ -1,13 +1,19 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+    provider = "prisma-client"
+    output   = "../app/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
+}
+
+model Round {
+    id           String    @id @default(uuid()) 
+    userName     String? 
+    startTime    DateTime  @default(now()) 
+    endTime      DateTime? 
+    durationMs   Int? 
+    correctCount Int       @default(0) 
+    totalCount   Int	   @default(36) 
+    completed    Boolean   @default(false) 
 }

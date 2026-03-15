@@ -6,15 +6,15 @@ import * as z from "zod";
 
 const answerSchema = z.object({
   roundId: z.string(),
-  place: z.string(),
-  x: z.int(),
-  y: z.int(),
+  character: z.string(),
+  x: z.number(),
+  y: z.number(),
 });
 
 async function validateAnswer(
   answer: {
     roundId: string;
-    place: string;
+    character: string;
     x: number;
     y: number;
   },
@@ -24,7 +24,7 @@ async function validateAnswer(
   try {
     const res = await prisma.answer.findFirstOrThrow({
       where: {
-        place: answer.place,
+        character: answer.character,
       },
     });
     if (res.x === answer.x && res.y === answer.y) {

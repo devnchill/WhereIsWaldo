@@ -19,8 +19,8 @@ model Round {
 }
 
 model Answer {
-    id    String @id @default(uuid())
-    place String
-    x     Int
-    y     Int
+    id        String @id @default(uuid())
+    character String
+    x         Float
+    y         Float
 }

@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useScore } from "./context/score";
 
 export default function Home() {
+  const [gameWon, setGameWon] = useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const [menuCoord, setMenuCoord] = useState<{ x: number; y: number } | null>(
     null,
   );
-  const { setScore } = useScore();
+  const { setScore, score } = useScore();
 
   useEffect(() => {
     const startRound = async () => {
@@ -24,6 +25,12 @@ export default function Home() {
 
     startRound();
   }, []);
+
+  useEffect(() => {
+    if (score >= 3) {
+      setGameWon(true);
+    }
+  }, [score]);
 
   async function handleSelectChange(character: string) {
     if (!menuCoord) return;
@@ -42,7 +49,9 @@ export default function Home() {
     });
 
     const data = await res.json();
-    if (data.isCorrect) setScore((prev) => prev + 1);
+    if (data.isCorrect) {
+      setScore((prev) => prev + 1);
+    }
     console.log(data);
     setMenuVisible(false);
   }
@@ -95,23 +104,44 @@ export default function Home() {
     );
   }
   return (
-    <div className="flex justify-center gap-40 ">
-      <div className="relative">
-        <Image
-          className="relative"
-          onClick={handleClick}
-          width={600}
-          height={800}
-          src={"/map.png"}
-          alt="puzzle"
-        />
-        {menuVisible && displayMenu(menuCoord)}
-      </div>
-      <section id="characters" className="flex flex-col gap-2">
-        <Image src={"/target1.png"} width={200} height={200} alt="target1" />
-        <Image src={"/target2.png"} width={200} height={200} alt="target2" />
-        <Image src={"/target3.png"} width={200} height={200} alt="target3" />
-      </section>
-    </div>
+    <>
+      {gameWon ? (
+        <div>Game Won</div>
+      ) : (
+        <div className="flex justify-center gap-40 ">
+          <div className="relative">
+            <Image
+              className="relative cursor-crosshair"
+              onClick={handleClick}
+              width={600}
+              height={800}
+              src={"/map.png"}
+              alt="puzzle"
+            />
+            {menuVisible && displayMenu(menuCoord)}
+          </div>
+          <section id="characters" className="flex flex-col gap-2">
+            <Image
+              src={"/target1.png"}
+              width={200}
+              height={200}
+              alt="target1"
+            />
+            <Image
+              src={"/target2.png"}
+              width={200}
+              height={200}
+              alt="target2"
+            />
+            <Image
+              src={"/target3.png"}
+              width={200}
+              height={200}
+              alt="target3"
+            />
+          </section>
+        </div>
+      )}
+    </>
   );
 }

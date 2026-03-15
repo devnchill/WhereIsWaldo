@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 import * as z from "zod";
+import { is } from "zod/locales";
 
 const SEARCH_RADIUS = 0.05;
 
@@ -27,7 +28,6 @@ async function validateAnswer(
     const res = await prisma.answer.findFirstOrThrow({
       where: {
         character: answer.character,
-        isCorrect: false,
       },
     });
     console.log(res);
@@ -37,16 +37,17 @@ async function validateAnswer(
       answer.x <= res.x + half &&
       answer.y >= res.y - half &&
       answer.y <= res.y + half;
+    await prisma.userAnswer.create({
+      data: {
+        roundId: answer.roundId,
+        character: answer.character,
+        x: answer.x,
+        y: answer.y,
+        isCorrect: isCoorect,
+      },
+    });
     if (isCoorect) {
       correctCount++;
-      await prisma.answer.update({
-        where: {
-          character: answer.character,
-        },
-        data: {
-          isCorrect: true,
-        },
-      });
       let end = new Date();
       let durationMs = end.getTime() - startTime.getTime();
       if (correctCount === 3) {

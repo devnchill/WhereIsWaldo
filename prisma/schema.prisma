@@ -8,20 +8,30 @@ datasource db {
 }
 
 model Round {
-    id           String    @id @default(uuid())
+    id           String       @id @default(uuid())
     userName     String?
-    startTime    DateTime  @default(now())
+    startTime    DateTime     @default(now())
     endTime      DateTime?
     durationMs   BigInt?
-    correctCount Int       @default(0)
-    totalCount   Int       @default(36)
-    completed    Boolean   @default(false)
+    correctCount Int          @default(0)
+    totalCount   Int          @default(36)
+    completed    Boolean      @default(false)
+    answers      UserAnswer[]
 }
 
 model Answer {
-    id        String  @id @default(uuid())
-    character String  @unique
+    id        String @id @default(uuid())
+    character String @unique
     x         Float
     y         Float
+}
+
+model UserAnswer {
+    id        String  @id @default(uuid())
+    x         Float
+    y         Float
+    character String
     isCorrect Boolean @default(false)
+    roundId   String
+    round     Round   @relation(fields: [roundId], references: [id])
 }

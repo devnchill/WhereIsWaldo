@@ -1,12 +1,14 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useScore } from "./context/score";
 
 export default function Home() {
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const [menuCoord, setMenuCoord] = useState<{ x: number; y: number } | null>(
     null,
   );
+  const { setScore } = useScore();
 
   useEffect(() => {
     const startRound = async () => {
@@ -40,6 +42,7 @@ export default function Home() {
     });
 
     const data = await res.json();
+    if (data.isCorrect) setScore((prev) => prev + 1);
     console.log(data);
     setMenuVisible(false);
   }

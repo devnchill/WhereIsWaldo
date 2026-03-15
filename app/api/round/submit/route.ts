@@ -27,6 +27,7 @@ async function validateAnswer(
     const res = await prisma.answer.findFirstOrThrow({
       where: {
         character: answer.character,
+        isCorrect: false,
       },
     });
     console.log(res);
@@ -38,6 +39,14 @@ async function validateAnswer(
       answer.y <= res.y + half;
     if (isCoorect) {
       correctCount++;
+      await prisma.answer.update({
+        where: {
+          character: answer.character,
+        },
+        data: {
+          isCorrect: true,
+        },
+      });
       let end = new Date();
       let durationMs = end.getTime() - startTime.getTime();
       if (correctCount === 3) {

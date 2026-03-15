@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import NavBar from "./components/NavBar";
+import { ScoreProvider } from "./context/score";
 
 export const metadata: Metadata = {
   title: "MapIt",
@@ -8,16 +10,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className="h-full w-full">
       <body className="antialiased min-h-screen">
-        <header>
-          <nav className="h-15">NavBar</nav>
-        </header>
-        <main>{children}</main>
+        <ScoreProvider>
+          <NavBar />
+          {children}
+        </ScoreProvider>
       </body>
     </html>
   );

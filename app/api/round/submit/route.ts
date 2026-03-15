@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 
 import * as z from "zod";
 
+const SEARCH_RADIUS = 0.05;
+
 const answerSchema = z.object({
   roundId: z.string(),
   character: z.string(),
@@ -27,7 +29,13 @@ async function validateAnswer(
         character: answer.character,
       },
     });
-    if (res.x === answer.x && res.y === answer.y) {
+    const half = SEARCH_RADIUS / 2;
+    const isCoorect =
+      answer.x >= res.x - half &&
+      answer.x <= res.x + half &&
+      answer.y >= res.y - half &&
+      answer.y <= res.y + half;
+    if (isCoorect) {
       correctCount++;
       let end = new Date();
       let durationMs = end.getTime() - startTime.getTime();
@@ -70,10 +78,9 @@ export async function POST(request: Request) {
       },
     );
   try {
-    // @ts-ignore
     const round = await prisma.round.findFirstOrThrow({
       where: {
-        id: answer.data?.roundId,
+        id: answer.data.roundId,
       },
     });
     const res = await validateAnswer(

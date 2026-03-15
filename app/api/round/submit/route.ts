@@ -22,13 +22,14 @@ async function validateAnswer(
   },
   correctCount: number,
   startTime: Date,
-): Promise<{ isCoorect: boolean; isGameOver: boolean }> {
+): Promise<{ isCoorect: boolean; isGameOver: boolean; duration?: number }> {
   try {
     const res = await prisma.answer.findFirstOrThrow({
       where: {
         character: answer.character,
       },
     });
+    console.log(res);
     const half = SEARCH_RADIUS / 2;
     const isCoorect =
       answer.x >= res.x - half &&
@@ -39,14 +40,14 @@ async function validateAnswer(
       correctCount++;
       let end = new Date();
       let durationMs = end.getTime() - startTime.getTime();
-      if (correctCount === 36) {
+      if (correctCount === 3) {
         await prisma.round.update({
           where: {
             id: answer.roundId,
           },
           data: { correctCount, endTime: end, durationMs: durationMs },
         });
-        return { isCoorect: true, isGameOver: true };
+        return { isCoorect: true, isGameOver: true, duration: durationMs };
       } else {
         await prisma.round.update({
           where: {
@@ -93,6 +94,7 @@ export async function POST(request: Request) {
         success: true,
         isGameOver: res.isGameOver,
         isCorrect: res.isCoorect,
+        ...(res.duration && { duration: res.duration }),
       }),
     );
   } catch (e) {

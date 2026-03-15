@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 
 async function seedDb() {
+  await prisma.answer.deleteMany();
+  await prisma.round.deleteMany();
   await prisma.answer.create({
     data: {
       character: "target1",
@@ -11,8 +13,8 @@ async function seedDb() {
   await prisma.answer.create({
     data: {
       character: "target2",
-      x: 0.472,
-      y: 0.463,
+      x: 0.476,
+      y: 0.461,
     },
   });
   await prisma.answer.create({

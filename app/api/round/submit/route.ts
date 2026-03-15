@@ -23,7 +23,12 @@ async function validateAnswer(
   },
   correctCount: number,
   startTime: Date,
-): Promise<{ isCoorect: boolean; isGameOver: boolean; duration?: number }> {
+): Promise<{
+  isCoorect: boolean;
+  isGameOver: boolean;
+  duration?: number;
+  rank?: number;
+}> {
   try {
     const res = await prisma.answer.findFirstOrThrow({
       where: {
@@ -55,9 +60,15 @@ async function validateAnswer(
           where: {
             id: answer.roundId,
           },
-          data: { correctCount, endTime: end, durationMs: durationMs },
+          data: { correctCount, endTime: end, durationMs: durationMs / 1000 },
         });
-        return { isCoorect: true, isGameOver: true, duration: durationMs };
+        return {
+          isCoorect: true,
+          isGameOver: true,
+          duration: durationMs,
+          //HACK: find it from db
+          rank: 1,
+        };
       } else {
         await prisma.round.update({
           where: {

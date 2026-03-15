@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useScore } from "./context/score";
+import GameOver from "./components/GameOver";
 
 export default function Home() {
   const [gameWon, setGameWon] = useState<boolean>(false);
@@ -10,6 +11,7 @@ export default function Home() {
     null,
   );
   const { setScore, score } = useScore();
+  const [duration, setDuration] = useState<number>(0);
 
   useEffect(() => {
     const startRound = async () => {
@@ -49,6 +51,8 @@ export default function Home() {
     });
 
     const data = await res.json();
+    if (data.duration) setDuration(data.duration);
+    if (data.rank) setDuration(data.rank);
     if (data.isCorrect) {
       setScore((prev) => prev + 1);
     }
@@ -106,7 +110,7 @@ export default function Home() {
   return (
     <>
       {gameWon ? (
-        <div>Game Won</div>
+        <GameOver duration={duration} rank={rank} />
       ) : (
         <div className="flex justify-center gap-40 ">
           <div className="relative">

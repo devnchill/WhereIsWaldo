@@ -12,6 +12,7 @@ export default function Home() {
   );
   const { setScore, score } = useScore();
   const [duration, setDuration] = useState<number>(0);
+  const [rank, setRank] = useState<number>(0);
 
   useEffect(() => {
     const startRound = async () => {
@@ -52,12 +53,13 @@ export default function Home() {
 
     const data = await res.json();
     if (data.duration) setDuration(data.duration);
-    if (data.rank) setDuration(data.rank);
+    if (data.rank) setRank(data.rank);
     if (data.isCorrect) {
       setScore((prev) => prev + 1);
     }
     console.log(data);
     setMenuVisible(false);
+    console.log("we won");
   }
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {

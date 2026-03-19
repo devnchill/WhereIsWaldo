@@ -6,7 +6,7 @@ const NavBar = () => {
 
   return (
     <nav className="h-15 flex justify-between p-4 bg-gray-100">
-      <span>MapIt</span>
+      <span>WhereIsWaldo</span>
       <span>Score: {score}</span>
     </nav>
   );

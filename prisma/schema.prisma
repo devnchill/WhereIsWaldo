@@ -27,11 +27,12 @@ model Answer {
 }
 
 model UserAnswer {
-    id        String  @id @default(uuid())
+    id        String @id @default(uuid())
     x         Float
     y         Float
     character String
-    isCorrect Boolean @default(false)
     roundId   String
-    round     Round   @relation(fields: [roundId], references: [id])
+    round     Round  @relation(fields: [roundId], references: [id])
+
+    @@unique([roundId, character])
 }

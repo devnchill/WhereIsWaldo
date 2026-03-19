@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 
 async function seedDb() {
-  await prisma.answer.deleteMany();
+  await prisma.userAnswer.deleteMany();
   await prisma.round.deleteMany();
+  await prisma.answer.deleteMany();
   await prisma.answer.create({
     data: {
       character: "target1",

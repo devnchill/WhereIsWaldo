@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar";
 import { ScoreProvider } from "./context/score";
 
 export const metadata: Metadata = {
-  title: "MapIt",
+  title: "WhereIsWaldo",
   description: "Map different states",
 };
 
